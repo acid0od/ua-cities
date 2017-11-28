@@ -14,10 +14,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class Main {
@@ -90,10 +88,21 @@ public class Main {
             
             cities.add(new City(cityName, aria, iq, population, square, populationDensity));
         }
-        
-        cities.stream()
+    
+        Map<String, List<City>> collect = cities.stream()
                 .sorted(Comparator.comparing(City::getAria))
-                .forEach(System.out::println);
-        
+                .collect(Collectors.groupingBy(City::getAria));
+    
+        for (String s : collect.keySet()) {
+            int p = 0;
+            float ssq = 0;
+            for (City s1 : collect.get(s)) {
+                p += s1.getPop();
+                ssq += s1.getA();
+                System.out.println(s1);
+            }
+            System.out.println("-------------: " + s + " Population=" + p + " Area=" + ssq);
+        }
+    
     }
 }

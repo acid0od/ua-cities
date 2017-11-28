@@ -16,27 +16,50 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class City {
-    String name;
-    String aria;
-    String iq;
-    String population;
-    String square;
-    String populationDensity;
+    private String name;
+    private String aria;
+    private String iq;
+    private String population;
+    private String square;
+    private String populationDensity;
     
     @Override
     public String toString() {
-        return name + ", " + aria + ", " + iq + ", " + toNumber(population) + ", " + square + ", " + populationDensity + "";
+        return name + ", " + aria + ", " + iq + ", " + toNumber(population) + ", " + square +  " (" + toNumber(square) + "), " + populationDensity + "";
+    }
+    
+    public int getPop() {
+        try {
+            return Integer.valueOf(toNumber(population));
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+    
+    public float getA() {
+        try {
+            return Float.valueOf(toNumber(square));
+        } catch (Exception e) {
+            return 0f;
+        }
     }
     
     private String toNumber(String baseString) {
-        List<String> tokensList = new ArrayList<>();
         boolean inQuotes = true;
         StringBuilder b = new StringBuilder();
         for (char c : baseString.toCharArray()) {
+            if (c == '.' && inQuotes) {
+                b.append(".");
+            }
+    
+            if (c == ',' && inQuotes) {
+                b.append(".");
+            }
+    
             if (c >= '0' && c <= '9' && inQuotes) {
                 b.append(c);
             }
-            if (c == '(') {
+            if (c == '(' || c == '[') {
                 inQuotes = false;
             }
         }
